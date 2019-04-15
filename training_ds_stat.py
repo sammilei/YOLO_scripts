@@ -47,7 +47,7 @@ for _file in files:
         with open(txt_src, 'r') as f:
             content = f.readlines()
             if(len(content) > 1):
-                print(txt_src, end=' ')
+                print(_file, end=' ')
             for line in content:
                 # increase by 1 to the class list
                 sums[int(line[0])] = sums.get(int(line[0]), 0) + 1
