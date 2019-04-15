@@ -29,7 +29,7 @@ copy_over = False
 if output_dir is not 'output' and not os.path.exists(output_dir):
     print("output dir is not a dir")
     exit()
-else:
+elif output_dir is not 'output':
     copy_over = True
 
 files = os.listdir(input_dir)
@@ -54,7 +54,7 @@ for _file in files:
                 if copy_over is True:
                     # check if the dir of class exists
                     if len(artifacts) > int(line[0]):
-                        class_dir = os.path.join(output_dir, artifacts[int(line[0])])
+                        class_dir = os.path.join(output_dir, line[0] + "_" + artifacts[int(line[0])])
                     else: 
                         class_dir = os.path.join(output_dir, "unknownClass_" + line[0])    
                     if not os.path.exists(class_dir):
