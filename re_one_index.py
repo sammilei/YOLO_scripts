@@ -5,10 +5,15 @@ import argparse
 parser = argparse.ArgumentParser("add some choices")
 parser.add_argument('-i',"--input", default='input', type=str, help='path to the label and image data')
 parser.add_argument('-o',"--output", default='output', type=str, help='path to the split data based on the classes')
+parser.add_argument('-ol',"--origin_label", default='origin_label', type=int, help='origin_label')
+parser.add_argument('-nl',"--new_label", default='new_label', type=int, help='new_label')
+
 
 args = parser.parse_args()
 lab_img_dir = args.input
 output = args.output
+origin_label = str(args.origin_label)
+new_label = str(args.new_label)
 
 if output is not 'output' and not os.path.exists(output):
     print("output dir is not a dir")
@@ -16,8 +21,7 @@ if output is not 'output' and not os.path.exists(output):
 
 files = os.listdir(lab_img_dir)
 
-origin_label = '4'
-new_label = '0'
+
 for fil in files:
     if fil.find(".txt") > -1:
 	print(fil)
