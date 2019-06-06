@@ -134,7 +134,7 @@ files = os.listdir(INPUT_DIR)
 test_images_files = []
 label_files = []
 for file in files:
-    print(file)
+    print(file
     if file.find(".jpg") > 0:
         test_images_files.append(os.path.join(INPUT_DIR, file))
     elif file.find(".txt") > 0:
