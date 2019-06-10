@@ -1,6 +1,12 @@
+'''
+$python extract_phone_img_label.py -i /media/psf/Downloads/june_4_9_sets_including_huskyonline_corrected/8_STIX_artifacts_images_handheld_v2_image_and_labels/ 
+-o ~/Documents/to_delete/phone/8_STIX_artifacts_images_handheld_v2_image_and_labels_phone/ -ol 4
+'''
+
 import os
 import argparse
 from shutil import copyfile
+
 
 parser = argparse.ArgumentParser("add some choices")
 parser.add_argument('-i',"--input", default='input', type=str, help='path to the label and image data')
