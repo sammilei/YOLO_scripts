@@ -84,7 +84,8 @@ sum_all = sum(sums.values())
 
 ''' printing '''
 print("\nAll exist labels and counts:")
-for _sum in sums.items():
+sorted_sum = sorted(sums.items(), key=lambda x: x[0])
+for _sum in sorted_sum:
     print('%d: %d - %2.2f%%' % (_sum[0], _sum[1], _sum[1]*100.0/sum_all))
 print("total: " + str(sum_all))
 
