@@ -1,7 +1,7 @@
 # statistic for the labels and can copy it over
-# how to run 
+# how to run
 '''
-$python3 training_ds_stat.py -dir ~/Desktop/ParallelsSharedFolders/YOLO/Dataset/MarsYard/labelled/bright+dark/marsyard_030919_rs_dark -class fire_x backpack drill survivor cellphone
+$python3 training_ds_stat.py -i ~/Desktop/ParallelsSharedFolders/YOLO/Dataset/MarsYard/labelled/bright+dark/marsyard_030919_rs_dark -class fire_x backpack drill survivor cellphone
 '''
 import os
 import sys
@@ -10,9 +10,12 @@ from shutil import copyfile
 
 
 parser = argparse.ArgumentParser("add some choices")
-parser.add_argument('-i',"--input", default='input', type=str, help='path to the label and image data')
-parser.add_argument('-class', '--classes', metavar='N', type=str, nargs='+', help='class list')
-parser.add_argument('-o',"--output", default='output', type=str, help='path to the split data based on the classes')
+parser.add_argument('-i', "--input", default='input',
+                    type=str, help='path to the label and image data')
+parser.add_argument('-class', '--classes', metavar='N',
+                    type=str, nargs='+', help='class list')
+parser.add_argument('-o', "--output", default='output', type=str,
+                    help='path to the split data based on the classes')
 
 args = parser.parse_args()
 
@@ -33,7 +36,6 @@ elif output_dir is not 'output':
     copy_over = True
 
 files = os.listdir(input_dir)
-print(copy_over)
 sums = {}
 
 file_counts = 0
@@ -42,21 +44,22 @@ for _file in files:
     base = _file[:_file.find('.')]
     # check if txt has corresponding jpg or png
     if _file.endswith(".txt") and _file.lower().find("readme") == -1 \
-    and (base + ".jpg" in files or base + ".png" in files):
+            and (base + ".jpg" in files or base + ".png" in files):
         txt_src = os.path.join(input_dir, _file)
         with open(txt_src, 'r') as f:
             content = f.readlines()
-            if(len(content) > 1):
-                print(_file, end=' ')
             for line in content:
                 # increase by 1 to the class list
+                line = line.replace('\x00', '')
                 sums[int(line[0])] = sums.get(int(line[0]), 0) + 1
                 if copy_over is True:
                     # check if the dir of class exists
                     if len(artifacts) > int(line[0]):
-                        class_dir = os.path.join(output_dir, line[0] + "_" + artifacts[int(line[0])])
-                    else: 
-                        class_dir = os.path.join(output_dir, "unknownClass_" + line[0])    
+                        class_dir = os.path.join(
+                            output_dir, line[0] + "_" + artifacts[int(line[0])])
+                    else:
+                        class_dir = os.path.join(
+                            output_dir, "unknownClass_" + line[0])
                     if not os.path.exists(class_dir):
                         os.mkdir(class_dir)
                         print("created a new class dir:", class_dir)
@@ -64,10 +67,10 @@ for _file in files:
                     txt_dst = os.path.join(class_dir, _file)
                     copyfile(txt_src, txt_dst)
                     # copy img
-                    img_src = txt_src.replace(".txt" ,".jpg")
+                    img_src = txt_src.replace(".txt", ".jpg")
                     img_dst = txt_dst.replace(".txt", ".jpg")
                     copyfile(img_src, img_dst)
-                    # copy xml    
+                    # copy xml
                     xml_src = txt_src.replace(".txt", ".xml")
                     if os.path.isfile(xml_src):
                         xml_dst = txt_dst.replace(".txt", ".xml")
@@ -87,11 +90,14 @@ print("total: " + str(sum_all))
 
 if artifacts is not None:
     max_len = len(max(artifacts, key=len))
+    width = 0
     print("\nWith given class names: ")
     for _sum in sums.items():
         width = max_len
         if len(artifacts) > _sum[0]:
-            print('%*s: %d - %2.2f%%' % (width, artifacts[_sum[0]], _sum[1], _sum[1]*100.0/sum_all))
+            print('%*s: %d - %2.2f%%' %
+                  (width, artifacts[_sum[0]], _sum[1], _sum[1]*100.0/sum_all))
         else:
-            print('%*s: %d - %2.2f%%' % (width, "unknownClass_" + str(_sum[0]), _sum[1], _sum[1]*100.0/sum_all))
-    print("%*s: %d" %(width, 'total', sum_all))
+            print('%*s: %d - %2.2f%%' % (width, "unknownClass_" +
+                                         str(_sum[0]), _sum[1], _sum[1]*100.0/sum_all))
+    print("%*s: %d" % (width, 'total', sum_all))
