@@ -1,4 +1,4 @@
-# statistic for the labels and can copy it over
+# statistic for the labels and can copy it over for a folder or data.txt
 # how to run
 '''
 $python3 training_ds_stat.py -i ~/Desktop/ParallelsSharedFolders/YOLO/Dataset/MarsYard/labelled/bright+dark/marsyard_030919_rs_dark -class fire_x backpack drill survivor cellphone
@@ -35,18 +35,33 @@ if output_dir is not 'output' and not os.path.exists(output_dir):
 elif output_dir is not 'output':
     copy_over = True
 
-files = os.listdir(input_dir)
+# get the labels
+# if is a data.txt containing .jpg/png/JPEG
+if input_dir.find('.txt') > -1:
+    lables_file = open(input_dir, 'r')
+    files = lables_file.readlines()
+    files = [file_[:file_.rfind('.')] + '.txt' for file_ in files if file_.find(
+        '.jpg') or file_.find('.png') or file_.find('.JPEG')]
+    if len(files) == 0:
+        print("no JPG or PNG or JPEG is found in the .txt")
+        exit()
+# if a dir containing bbox.txt and img.jpg/png/JPEG
+elif os.path.isdir(input_dir):
+    files = os.listdir(input_dir)
+    files = [os.path.join(input_dir, file_)
+             for file_ in files if file_.endswith('.txt')]
+else:
+    print("input is not a .txt or a directory")
+    exit()
 sums = {}
 
 file_counts = 0
 print(" **** files with 1+ objects ****")
 for _file in files:
-    base = _file[:_file.find('.')]
-    # check if txt has corresponding jpg or png
-    if _file.endswith(".txt") and _file.lower().find("readme") == -1 \
-            and (base + ".jpg" in files or base + ".png" in files):
-        txt_src = os.path.join(input_dir, _file)
-        with open(txt_src, 'r') as f:
+    jpg_path = _file.replace('.txt', '.jpg')
+    png_path = _file.replace('.txt', '.png')
+    if os.path.exists(jpg_path) or os.path.exists(png_path):
+        with open(_file, 'r') as f:
             content = f.readlines()
             for line in content:
                 # increase by 1 to the class list
@@ -76,6 +91,9 @@ for _file in files:
                         xml_dst = txt_dst.replace(".txt", ".xml")
                         copyfile(xml_src, xml_dst)
             file_counts += 1
+    else:
+        print("can't find png or jpg for ", _file)
+        exit()
 print("\n\n# of files with label and cooridinating jpg/png: \n" + str(file_counts))
 
 
