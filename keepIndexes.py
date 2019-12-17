@@ -1,5 +1,6 @@
 """
 keep the designated indexes
+$python keepIndexes.py -i path_to_images_and_labels -o path_to_outputs -ol 1,2,3 
 """
 import os
 import argparse
