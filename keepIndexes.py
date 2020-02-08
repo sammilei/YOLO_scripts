@@ -51,7 +51,7 @@ for fil in files:
         with open(fil_out, "aw") as f:
             for line in content:
                 line = line.split()
-                if not (len(line) == 5 and line[0] in origin_label):
+                if len(line) == 5 and int(line[0]) in origin_label:
                     # write it to the file
                     line = ' '.join(line)
                     f.write(line)
